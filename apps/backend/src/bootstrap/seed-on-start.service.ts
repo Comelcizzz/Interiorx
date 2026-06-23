@@ -1,11 +1,11 @@
-import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { spawn } from 'node:child_process'
+import { spawnSync } from 'node:child_process'
 import { Model } from 'mongoose'
 import { User } from '../mongo/schemas/user.schema'
 
 @Injectable()
-export class SeedOnStartService implements OnApplicationBootstrap {
+export class SeedOnStartService {
 	private readonly logger = new Logger(SeedOnStartService.name)
 
 	constructor(
@@ -13,42 +13,42 @@ export class SeedOnStartService implements OnApplicationBootstrap {
 		private readonly userModel: Model<User>
 	) {}
 
-	onApplicationBootstrap() {
-		setImmediate(() => {
-			void this.bootDemoData()
-		})
-	}
-
-	private spawnNpm(script: string) {
-		return spawn('npm', ['run', script, '--workspace=@tailored/backend'], {
-			cwd: process.cwd(),
-			env: process.env,
-			stdio: 'inherit',
-			shell: true,
-			detached: false,
-		})
-	}
-
-	private async bootDemoData() {
+	async runAfterListen() {
 		try {
-			this.spawnNpm('ensure:demo-assets')
 			const forceSeed = process.env.FORCE_SEED === 'true'
 			const count = await this.userModel.countDocuments()
 			if (!forceSeed && count > 0) {
 				this.logger.log(`Database ready (${count} users) — seed skipped.`)
 				return
 			}
-			this.logger.log('Running demo seed in background...')
-			const child = this.spawnNpm('seed')
-			child.on('exit', (code) => {
-				if (code === 0) {
-					this.logger.log('Demo seed completed.')
-					return
+			this.logger.log('Running demo seed...')
+			const result = spawnSync(
+				'npm',
+				['run', 'seed', '--workspace=@tailored/backend'],
+				{
+					cwd: process.cwd(),
+					env: process.env,
+					stdio: 'inherit',
+					shell: true,
+					timeout: 600_000,
 				}
-				this.logger.error(`Demo seed failed with exit code ${code ?? 1}.`)
-			})
+			)
+			if (result.error) {
+				this.logger.error('Seed process error', result.error)
+				return
+			}
+			if (result.status !== 0) {
+				this.logger.error(
+					`Demo seed failed with exit code ${result.status ?? 1}.`
+				)
+				if (result.signal) {
+					this.logger.error(`Seed terminated by signal ${result.signal}`)
+				}
+				return
+			}
+			this.logger.log('Demo seed completed.')
 		} catch (error) {
-			this.logger.error('Failed to start demo seed', error)
+			this.logger.error('Failed to run demo seed', error)
 		}
 	}
 }
