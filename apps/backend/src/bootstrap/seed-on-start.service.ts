@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { spawnSync } from 'node:child_process'
+import { join } from 'node:path'
+import { register } from 'ts-node'
 import { Model } from 'mongoose'
 import { User } from '../mongo/schemas/user.schema'
 
@@ -21,34 +22,19 @@ export class SeedOnStartService {
 				this.logger.log(`Database ready (${count} users) — seed skipped.`)
 				return
 			}
-			this.logger.log('Running demo seed...')
-			const result = spawnSync(
-				'npm',
-				['run', 'seed', '--workspace=@tailored/backend'],
-				{
-					cwd: process.cwd(),
-					env: process.env,
-					stdio: 'inherit',
-					shell: true,
-					timeout: 600_000,
-				}
-			)
-			if (result.error) {
-				this.logger.error('Seed process error', result.error)
-				return
-			}
-			if (result.status !== 0) {
-				this.logger.error(
-					`Demo seed failed with exit code ${result.status ?? 1}.`
-				)
-				if (result.signal) {
-					this.logger.error(`Seed terminated by signal ${result.signal}`)
-				}
-				return
-			}
+			this.logger.log('Running demo seed in-process...')
+			register({
+				project: join(process.cwd(), 'apps/backend/tsconfig.json'),
+				transpileOnly: true,
+			})
+			// eslint-disable-next-line @typescript-eslint/no-require-imports
+			const { runMongoSeed } = require(
+				join(process.cwd(), 'apps/backend/scripts/seed-mongo.ts')
+			) as { runMongoSeed: () => Promise<void> }
+			await runMongoSeed()
 			this.logger.log('Demo seed completed.')
 		} catch (error) {
-			this.logger.error('Failed to run demo seed', error)
+			this.logger.error('Demo seed failed', error)
 		}
 	}
 }

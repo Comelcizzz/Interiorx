@@ -2797,7 +2797,7 @@ async function patchLegacyNotificationTexts(c: Ctx) {
 	}
 }
 
-async function main() {
+export async function runMongoSeed() {
 	const app = await NestFactory.createApplicationContext(AppModule, {
 		logger: ['error', 'warn', 'log'],
 	})
@@ -2827,6 +2827,10 @@ async function main() {
 	} finally {
 		await app.close()
 	}
+}
+
+async function main() {
+	await runMongoSeed()
 }
 main().catch((err) => {
 	console.error('Seed failed', err)
