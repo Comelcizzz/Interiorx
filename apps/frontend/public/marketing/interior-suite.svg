@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 780" role="img" aria-label="Warm tailored interior design concept">
+  <defs>
+    <linearGradient id="wall" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#f6f1e8"/>
+      <stop offset="1" stop-color="#d8e3dc"/>
+    </linearGradient>
+    <linearGradient id="window" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#dbeafe"/>
+      <stop offset="1" stop-color="#eef8f2"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="780" fill="url(#wall)"/>
+  <path d="M0 626h1200v154H0z" fill="#d0b18d"/>
+  <path d="M120 110h355v370H120z" rx="26" fill="url(#window)" stroke="#fff" stroke-width="18"/>
+  <path d="M725 88h330v475H725z" rx="30" fill="#1d2a25"/>
+  <path d="M768 132h244v132H768zm0 172h244v132H768z" fill="#e6d8c8" opacity=".95"/>
+  <path d="M190 565h370v58H190z" rx="29" fill="#172033"/>
+  <path d="M245 438h270c54 0 98 44 98 98v72H147v-72c0-54 44-98 98-98z" fill="#8f6c55"/>
+  <path d="M606 392h142v230H606z" rx="18" fill="#f8f4ed"/>
+  <path d="M640 432h74v150h-74z" rx="37" fill="#26845b"/>
+  <circle cx="314" cy="244" r="78" fill="#f0c98c"/>
+  <path d="M66 670h1068" stroke="#8f6c55" stroke-width="4" opacity=".35"/>
+  <path d="M96 706h1040" stroke="#8f6c55" stroke-width="3" opacity=".22"/>
+</svg>

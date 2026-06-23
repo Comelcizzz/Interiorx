@@ -1,0 +1,78 @@
+export enum RoleCode {
+	ADMIN = 'ADMIN',
+	PROJECT_MANAGER = 'PROJECT_MANAGER',
+	DESIGNER = 'DESIGNER',
+	BRIGADIR = 'BRIGADIR',
+	CLIENT = 'CLIENT',
+}
+export enum OrderStatus {
+	NEW = 'NEW',
+	QUALIFIED = 'QUALIFIED',
+	CONVERTED = 'CONVERTED',
+	REJECTED = 'REJECTED',
+}
+export enum ProjectStatus {
+	DRAFT = 'DRAFT',
+	ESTIMATION = 'ESTIMATION',
+	DESIGN = 'DESIGN',
+	APPROVED = 'APPROVED',
+	IN_PROGRESS = 'IN_PROGRESS',
+	PAUSED = 'PAUSED',
+	COMPLETED = 'COMPLETED',
+	CANCELLED = 'CANCELLED',
+	WARRANTY = 'WARRANTY',
+}
+export enum TaskStatus {
+	BACKLOG = 'BACKLOG',
+	READY = 'READY',
+	IN_PROGRESS = 'IN_PROGRESS',
+	BLOCKED = 'BLOCKED',
+	REVIEW = 'REVIEW',
+	DONE = 'DONE',
+}
+export enum EstimateStatus {
+	DRAFT = 'DRAFT',
+	PRICING = 'PRICING',
+	PENDING_REVIEW = 'PENDING_REVIEW',
+	SENT = 'SENT',
+	APPROVED = 'APPROVED',
+	REJECTED = 'REJECTED',
+	EXPIRED = 'EXPIRED',
+}
+export enum PaymentStatus {
+	PENDING = 'PENDING',
+	PAID = 'PAID',
+	FAILED = 'FAILED',
+	REFUNDED = 'REFUNDED',
+}
+export enum InvoiceStatus {
+	DRAFT = 'DRAFT',
+	SENT = 'SENT',
+	PAID = 'PAID',
+	OVERDUE = 'OVERDUE',
+	CANCELLED = 'CANCELLED',
+}
+export enum ReceiptStatus {
+	ISSUED = 'ISSUED',
+	VOIDED = 'VOIDED',
+}
+export enum ApprovalStatus {
+	PENDING = 'PENDING',
+	APPROVED = 'APPROVED',
+	REJECTED = 'REJECTED',
+	CHANGES_REQUESTED = 'CHANGES_REQUESTED',
+}
+export enum ChangeRequestStatus {
+	OPEN = 'OPEN',
+	PRICED = 'PRICED',
+	APPROVED = 'APPROVED',
+	REJECTED = 'REJECTED',
+	APPLIED = 'APPLIED',
+}
+export enum InventoryMovementType {
+	PURCHASE = 'PURCHASE',
+	RESERVE = 'RESERVE',
+	WRITE_OFF = 'WRITE_OFF',
+	RETURN = 'RETURN',
+	ADJUSTMENT = 'ADJUSTMENT',
+}

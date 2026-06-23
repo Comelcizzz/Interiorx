@@ -1,0 +1,53 @@
+# One-click deploy: https://dashboard.render.com/blueprint/new?repo=https://github.com/Comelcizzz/Interiorx
+#
+# Set MONGODB_URI in Render dashboard (do not commit secrets to git).
+# Atlas → Network Access → Allow 0.0.0.0/0 for Render.
+
+services:
+  - type: web
+    name: interiorx-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./apps/backend/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: JWT_ACCESS_TTL
+        value: 24h
+      - key: JWT_REFRESH_TTL
+        value: 7d
+      - key: FRONTEND_URL
+        value: https://interiorx-web.onrender.com
+      - key: BACKEND_PORT
+        value: 4000
+      - key: UPLOAD_DIR
+        value: /app/uploads
+      - key: PERSIST_UPLOADS_IN_DB
+        value: "true"
+      - key: UPLOAD_MAX_BYTES
+        value: "2097152"
+
+  - type: web
+    name: interiorx-web
+    runtime: static
+    buildCommand: npm ci && npm run build --workspace=@tailored/shared && npm run build --workspace=@tailored/ui && npm run build --workspace=@tailored/frontend
+    staticPublishPath: ./apps/frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: interiorx-api
+          envVarKey: RENDER_EXTERNAL_URL
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

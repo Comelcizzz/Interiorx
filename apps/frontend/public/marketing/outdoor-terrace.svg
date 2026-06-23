@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 780" role="img" aria-label="Outdoor terrace and landscape design">
+  <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+    <stop stop-color="#dcece8"/>
+    <stop offset="1" stop-color="#f7f1e8"/>
+  </linearGradient>
+  <rect width="1200" height="780" fill="url(#sky)"/>
+  <path d="M0 530h1200v250H0z" fill="#c6b08d"/>
+  <path d="M120 212h520v318H120z" rx="24" fill="#f8f3ea"/>
+  <path d="M190 274h150v160H190zm230 0h150v160H420z" fill="#183126"/>
+  <path d="M718 280h330v250H718z" rx="28" fill="#172033"/>
+  <path d="M768 330h230v64H768zm0 96h150v54H768z" fill="#e6d8c8"/>
+  <path d="M90 610h1020" stroke="#8f6c55" stroke-width="8" opacity=".45"/>
+  <circle cx="900" cy="198" r="78" fill="#f5c36e"/>
+  <path d="M76 500c120-105 220-96 330 0 126-98 246-106 390 0 118-82 220-72 328 0v84H76z" fill="#26845b" opacity=".82"/>
+</svg>

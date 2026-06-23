@@ -1,0 +1,498 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--tds-primary: #26845b;
+	--tds-primary-strong: #176c49;
+	--tds-highlight: #deefe6;
+	--tds-copper: #b7794c;
+	--tds-clay: #8f6c55;
+	--tds-graphite: #1a2233;
+	--tds-ink: #111827;
+	--tds-dark: #414753;
+	--tds-muted: #747b87;
+	--tds-silver: #dde2e8;
+	--tds-background: #ecefed;
+	--tds-light: #ffffff;
+	--tds-shadow-dark: rgba(76, 76, 76, 0.15);
+	--tds-shadow-primary: rgba(38, 132, 91, 0.24);
+	--tds-card-fill: rgba(255, 255, 255, 0.38);
+	--tds-card-fill-strong: rgba(255, 255, 255, 0.72);
+	color: var(--tds-ink);
+	background: var(--tds-background);
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+body {
+	margin: 0;
+	min-width: 320px;
+	min-height: 100vh;
+	background: var(--tds-background);
+}
+
+.leaflet-container {
+	min-height: 640px;
+	width: 100%;
+	border-radius: 20px;
+	border: 1px solid rgba(255, 255, 255, 0.68);
+	box-shadow: 10px 20px 40px rgba(76, 76, 76, 0.13);
+}
+
+.tds-shell {
+	background:
+		linear-gradient(110deg, rgba(255, 255, 255, 0.74) 0 20%, transparent 20% 100%),
+		linear-gradient(156deg, rgba(38, 132, 91, 0.075) 0 22%, transparent 22% 100%),
+		linear-gradient(23deg, transparent 0 63%, rgba(183, 121, 76, 0.075) 63% 74%, transparent 74% 100%),
+		repeating-linear-gradient(90deg, rgba(17, 24, 39, 0.025) 0 1px, transparent 1px 96px),
+		repeating-linear-gradient(0deg, rgba(17, 24, 39, 0.02) 0 1px, transparent 1px 96px),
+		var(--tds-background);
+}
+
+.tds-gradient-bg {
+	position: fixed;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+	background:
+		linear-gradient(100deg, rgba(255, 255, 255, 0.7), transparent 34%),
+		repeating-linear-gradient(135deg, rgba(17, 24, 39, 0.032) 0 1px, transparent 1px 18px);
+	mix-blend-mode: multiply;
+	opacity: 0.82;
+}
+
+.tds-dashboard {
+	color: var(--tds-ink);
+}
+
+.tds-public-header {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.72);
+	background:
+		linear-gradient(90deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.5)),
+		rgba(243, 241, 236, 0.86);
+	backdrop-filter: blur(18px);
+	-webkit-backdrop-filter: blur(18px);
+}
+
+.tds-sidebar-shell {
+	background:
+		linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.16)),
+		linear-gradient(90deg, rgba(255, 255, 255, 0.32), transparent);
+	border-right: 1px solid rgba(255, 255, 255, 0.58);
+	box-shadow: 16px 0 40px rgba(17, 24, 39, 0.08);
+	backdrop-filter: blur(18px);
+	-webkit-backdrop-filter: blur(18px);
+}
+
+.tds-brand-zone,
+.tds-studio-note {
+	border: 1px solid rgba(255, 255, 255, 0.68);
+	background:
+		linear-gradient(140deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.28)),
+		linear-gradient(24deg, rgba(38, 132, 91, 0.08), transparent 54%);
+	box-shadow:
+		12px 22px 44px rgba(76, 76, 76, 0.11),
+		inset 0 1px 0 rgba(255, 255, 255, 0.78);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+}
+
+.tds-topbar {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.62);
+	background:
+		linear-gradient(90deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.36)),
+		rgba(236, 239, 237, 0.72);
+	backdrop-filter: blur(22px);
+	-webkit-backdrop-filter: blur(22px);
+}
+
+.tds-glass-card,
+.tds-glass-control {
+	position: relative;
+	border: 1px solid rgba(255, 255, 255, 0.72);
+	background:
+		linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.3)),
+		var(--tds-card-fill);
+	box-shadow:
+		10px 20px 40px rgba(76, 76, 76, 0.13),
+		inset 0 1px 0 rgba(255, 255, 255, 0.75);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+}
+
+.tds-glass-card {
+	overflow: hidden;
+	transition:
+		transform 240ms ease,
+		box-shadow 280ms ease,
+		border-color 280ms ease;
+}
+
+.tds-glass-card:hover {
+	transform: translateY(-2px);
+	border-color: rgba(255, 255, 255, 0.95);
+	box-shadow:
+		10px 20px 40px rgba(38, 132, 91, 0.17),
+		inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+.tds-glass-card::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	border-radius: inherit;
+	background:
+		linear-gradient(135deg, rgba(255, 255, 255, 0.72), transparent 32%),
+		linear-gradient(320deg, rgba(255, 255, 255, 0.5), transparent 42%);
+	opacity: 0.65;
+}
+
+.tds-glass-card > * {
+	position: relative;
+	z-index: 1;
+}
+
+.tds-sidebar-link {
+	background: rgba(255, 255, 255, 0.22);
+	border: 1px solid transparent;
+}
+
+.tds-sidebar-link:hover {
+	border-color: rgba(255, 255, 255, 0.75);
+	background: rgba(255, 255, 255, 0.62);
+	box-shadow: 0 12px 30px rgba(76, 76, 76, 0.11);
+}
+
+.tds-sidebar-link-active {
+	background:
+		linear-gradient(135deg, var(--tds-primary), #1e7250),
+		var(--tds-primary);
+	box-shadow: 10px 20px 40px rgba(38, 132, 91, 0.25);
+}
+
+.tds-brand-mark {
+	border-radius: 20px;
+	background:
+		linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.48)),
+		rgba(255, 255, 255, 0.58);
+	box-shadow:
+		0 18px 36px rgba(23, 32, 51, 0.14),
+		0 6px 18px rgba(38, 132, 91, 0.12),
+		inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.tds-logo-word {
+	font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+.tds-logo-subline {
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.tds-live-dot {
+	position: relative;
+	display: inline-flex;
+	width: 9px;
+	height: 9px;
+	border-radius: 999px;
+	background: var(--tds-primary);
+	box-shadow: 0 0 0 5px rgba(38, 132, 91, 0.13);
+}
+
+.tds-dashboard-hero {
+	position: relative;
+	overflow: hidden;
+	border: 1px solid rgba(255, 255, 255, 0.72);
+	background:
+		linear-gradient(135deg, rgba(17, 24, 39, 0.94), rgba(23, 32, 51, 0.86)),
+		repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 62px);
+	box-shadow: 18px 28px 60px rgba(17, 24, 39, 0.22);
+}
+
+.tds-dashboard-hero::after {
+	content: '';
+	position: absolute;
+	right: -12%;
+	top: 0;
+	width: 52%;
+	height: 100%;
+	transform: skewX(-16deg);
+	background:
+		linear-gradient(180deg, rgba(183, 121, 76, 0.22), rgba(38, 132, 91, 0.18)),
+		repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.18) 0 1px, transparent 1px 28px);
+	opacity: 0.9;
+}
+
+.tds-dashboard-hero > * {
+	position: relative;
+	z-index: 1;
+}
+
+.tds-workbench {
+	position: relative;
+	overflow: hidden;
+	border: 1px solid rgba(255, 255, 255, 0.76);
+	background:
+		linear-gradient(135deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.38)),
+		linear-gradient(30deg, rgba(38, 132, 91, 0.1), transparent 46%),
+		rgba(255, 255, 255, 0.42);
+	box-shadow:
+		12px 22px 46px rgba(76, 76, 76, 0.11),
+		inset 0 1px 0 rgba(255, 255, 255, 0.85);
+	backdrop-filter: blur(18px);
+	-webkit-backdrop-filter: blur(18px);
+}
+
+.tds-workbench::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	background:
+		linear-gradient(90deg, rgba(23, 32, 51, 0.05) 1px, transparent 1px),
+		linear-gradient(0deg, rgba(23, 32, 51, 0.04) 1px, transparent 1px);
+	background-size: 38px 38px;
+	mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.32), transparent 76%);
+}
+
+.tds-workbench > * {
+	position: relative;
+	z-index: 1;
+}
+
+.tds-quick-stat {
+	border: 1px solid rgba(255, 255, 255, 0.78);
+	background: rgba(255, 255, 255, 0.46);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.74);
+}
+
+.tds-dashboard-metric {
+	border-radius: 22px;
+}
+
+.tds-plan-card {
+	border-radius: 24px;
+	background:
+		linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.38)),
+		rgba(255, 255, 255, 0.45);
+}
+
+.tds-mini-plan {
+	position: relative;
+	display: grid;
+	grid-template-columns: 1fr 0.82fr;
+	grid-template-rows: 74px 54px;
+	gap: 8px;
+	min-height: 138px;
+	padding: 10px;
+	border: 1px solid rgba(23, 32, 51, 0.08);
+	border-radius: 22px;
+	background:
+		linear-gradient(90deg, rgba(23, 32, 51, 0.05) 1px, transparent 1px),
+		linear-gradient(0deg, rgba(23, 32, 51, 0.045) 1px, transparent 1px),
+		rgba(255, 255, 255, 0.52);
+	background-size: 24px 24px;
+}
+
+.tds-mini-plan::after {
+	content: '';
+	position: absolute;
+	left: 38%;
+	top: 14px;
+	bottom: 14px;
+	width: 2px;
+	background: rgba(23, 32, 51, 0.12);
+}
+
+.tds-room {
+	display: grid;
+	place-items: center;
+	border: 2px solid rgba(23, 32, 51, 0.14);
+	border-radius: 16px;
+	font-size: 10px;
+	font-weight: 900;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: rgba(23, 32, 51, 0.62);
+	background: rgba(255, 255, 255, 0.58);
+}
+
+.tds-room-a {
+	background: rgba(38, 132, 91, 0.12);
+}
+
+.tds-room-b {
+	background: rgba(183, 121, 76, 0.14);
+}
+
+.tds-room-c {
+	background: rgba(23, 32, 51, 0.09);
+}
+
+.tds-room-d {
+	background: rgba(255, 255, 255, 0.76);
+}
+
+.tds-chart-card {
+	min-height: 430px;
+}
+
+.tds-status-board {
+	border-radius: 20px;
+	border: 1px solid rgba(255, 255, 255, 0.66);
+	background:
+		linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.26)),
+		rgba(255, 255, 255, 0.32);
+	padding: 14px;
+}
+
+.tds-status-row {
+	border: 1px solid rgba(255, 255, 255, 0.64);
+	background:
+		linear-gradient(90deg, var(--status-soft), rgba(255, 255, 255, 0.5) 48%),
+		rgba(255, 255, 255, 0.42);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.tds-status-track {
+	position: relative;
+	height: 12px;
+	overflow: hidden;
+	border-radius: 999px;
+	background:
+		linear-gradient(90deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.42)),
+		rgba(23, 32, 51, 0.08);
+	box-shadow: inset 0 1px 2px rgba(23, 32, 51, 0.08);
+}
+
+.tds-status-fill {
+	position: absolute;
+	inset: 0 auto 0 0;
+	min-width: 22px;
+	border-radius: inherit;
+	background:
+		linear-gradient(90deg, var(--status-accent), color-mix(in srgb, var(--status-accent) 78%, white));
+	box-shadow: 0 8px 20px color-mix(in srgb, var(--status-accent) 22%, transparent);
+}
+
+.tds-review-ticket {
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 18px;
+	padding: 12px 14px;
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.tds-material-strip {
+	display: grid;
+	grid-template-columns: 1.4fr 1fr 0.82fr 1.18fr 0.9fr;
+	gap: 8px;
+}
+
+.tds-material-strip span {
+	height: 34px;
+	border-radius: 999px;
+	border: 1px solid rgba(255, 255, 255, 0.72);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.tds-plan-panel {
+	background:
+		linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.42)),
+		repeating-linear-gradient(90deg, rgba(17, 24, 39, 0.035) 0 1px, transparent 1px 32px),
+		repeating-linear-gradient(0deg, rgba(17, 24, 39, 0.03) 0 1px, transparent 1px 32px);
+}
+
+.tds-sidebar-scroll {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(119, 127, 141, 0.45) transparent;
+}
+
+.tds-page {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(119, 127, 141, 0.48) transparent;
+}
+
+.tds-page table {
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0;
+	background: rgba(255, 255, 255, 0.56);
+}
+
+.tds-page thead {
+	background: rgba(255, 255, 255, 0.64);
+}
+
+.tds-page th {
+	font-weight: 800;
+	letter-spacing: 0.08em;
+}
+
+.tds-page tr {
+	transition: background 180ms ease;
+}
+
+.tds-page tbody tr:hover {
+	background: rgba(223, 242, 232, 0.5);
+}
+
+.tds-page td,
+.tds-page th {
+	border-color: rgba(223, 229, 236, 0.78);
+}
+
+.tds-page .recharts-wrapper,
+.tds-page .recharts-surface {
+	overflow: visible;
+}
+
+.leaflet-container {
+  min-height: 520px;
+  width: 100%;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+}
+
+.tds-page > * {
+  animation: tds-fadein 200ms ease both;
+}
+
+@keyframes tds-fadein {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+.animate-pulse {
+  background: linear-gradient(90deg, rgba(255,255,255,0.6) 25%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0.6) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease infinite;
+}
+
+:focus-visible {
+  outline: 2px solid var(--tds-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: rgba(38,132,91,0.2);
+  color: var(--tds-ink);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(119,127,141,0.35) transparent;
+}

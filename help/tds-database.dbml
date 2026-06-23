@@ -1,0 +1,423 @@
+// INTERIORIX — повна логічна ER-модель (MongoDB)
+// https://dbdiagram.io/d → Import → вставити файл → Export PNG/PDF
+// Усі поля з apps/backend/src/mongo/schemas/ (без складу / quality)
+
+Project tds {
+  database_type: 'MongoDB'
+  Note: 'INTERIORIX · колекції = таблиці · ObjectId = PK/FK'
+}
+
+TableGroup auth {
+  roles
+  users
+  client_profiles
+  staff_profiles
+  uploaded_files
+}
+
+Table roles {
+  _id objectid [pk]
+  code varchar [not null, unique]
+  name varchar [not null]
+  description varchar [not null]
+  permissions varchar [note: 'string[]']
+  created_at datetime
+}
+
+Table users {
+  _id objectid [pk]
+  email varchar [not null, unique]
+  password_hash varchar [not null]
+  full_name varchar [not null]
+  phone varchar
+  title varchar
+  is_active boolean [default: true]
+  role_id objectid [not null, ref: > roles._id]
+  avatar_file_id objectid [ref: > uploaded_files._id]
+  created_at datetime
+  updated_at datetime
+}
+
+Table client_profiles {
+  _id objectid [pk]
+  user_id objectid [not null, unique, ref: - users._id]
+  company_name varchar
+  lead_source varchar [not null]
+  created_at datetime
+  updated_at datetime
+}
+
+Table staff_profiles {
+  _id objectid [pk]
+  user_id objectid [not null, unique, ref: - users._id]
+  specialization varchar [not null]
+  capacity_hours int [default: 40]
+}
+
+Table uploaded_files {
+  _id objectid [pk]
+  original_name varchar [not null]
+  storage_path varchar [not null]
+  mime_type varchar [not null]
+  size int [not null]
+  sha256 varchar [not null, unique]
+  uploaded_by objectid [ref: > users._id]
+  created_at datetime
+  updated_at datetime
+}
+
+TableGroup public_content {
+  catalog_services
+  portfolio_items
+  contact_submissions
+}
+
+Table catalog_services {
+  _id objectid [pk]
+  slug varchar [not null, unique]
+  name varchar [not null]
+  short_description varchar
+  long_description varchar
+  base_price varchar
+  category varchar
+  price_unit varchar
+  style varchar [note: 'string[]']
+  is_active boolean
+  sort_order int
+  hero_image_url varchar
+  gallery_image_urls varchar [note: 'string[]']
+  owner_staff_id objectid [ref: > staff_profiles._id]
+  created_at datetime
+  updated_at datetime
+}
+
+Table portfolio_items {
+  _id objectid [pk]
+  slug varchar [not null, unique]
+  title varchar [not null]
+  summary varchar
+  description varchar
+  category varchar
+  style varchar
+  completed_at datetime
+  owner_staff_id objectid [ref: > staff_profiles._id]
+  project_id objectid [ref: > projects._id]
+  is_published boolean
+  sort_order int
+  cover_image_url varchar
+  gallery_image_urls varchar [note: 'string[]']
+  created_at datetime
+  updated_at datetime
+}
+
+Table contact_submissions {
+  _id objectid [pk]
+  full_name varchar [not null]
+  email varchar [not null]
+  phone varchar
+  message varchar [not null]
+  attachment_url varchar
+  created_at datetime
+  updated_at datetime
+}
+
+TableGroup crm {
+  orders
+  projects
+  project_locations
+  change_requests
+}
+
+Table orders {
+  _id objectid [pk]
+  code varchar [not null, unique]
+  title varchar [not null]
+  description varchar [not null]
+  status varchar [not null]
+  requested_budget varchar
+  preferred_start datetime
+  address_line varchar [not null]
+  city varchar [not null]
+  phone varchar [not null]
+  service_slug varchar
+  style varchar
+  source varchar
+  estimated_price varchar
+  reference_photo_urls varchar [note: 'string[]']
+  portfolio_reference_slug varchar
+  client_id objectid [not null, ref: > client_profiles._id]
+  project_id objectid [ref: > projects._id]
+  service_catalog_id objectid [ref: > catalog_services._id]
+  designer_id objectid [ref: > staff_profiles._id]
+  worker_ids varchar [note: 'ObjectId[]']
+  created_at datetime
+  updated_at datetime
+}
+
+Table projects {
+  _id objectid [pk]
+  code varchar [not null, unique]
+  title varchar [not null]
+  description varchar [not null]
+  status varchar [not null]
+  budget_planned varchar [not null]
+  budget_approved varchar
+  start_date datetime
+  due_date datetime
+  client_id objectid [not null, ref: > client_profiles._id]
+  manager_id objectid [ref: > staff_profiles._id]
+  designer_id objectid [ref: > staff_profiles._id]
+  brigadir_id objectid [ref: > staff_profiles._id]
+  created_at datetime
+  updated_at datetime
+}
+
+Table project_locations {
+  _id objectid [pk]
+  project_id objectid [not null, unique, ref: - projects._id]
+  address_line varchar [not null]
+  city varchar [not null]
+  region varchar [not null]
+  postal_code varchar
+  country varchar [default: 'Україна']
+  place_label varchar [not null]
+  latitude varchar [not null]
+  longitude varchar [not null]
+  created_at datetime
+  updated_at datetime
+}
+
+Table change_requests {
+  _id objectid [pk]
+  project_id objectid [not null, ref: > projects._id]
+  title varchar [not null]
+  description varchar [not null]
+  status varchar [not null]
+  impact_cost varchar
+  impact_days int
+  created_at datetime
+  updated_at datetime
+}
+
+TableGroup finance {
+  estimates
+  estimate_items
+  approvals
+  invoices
+  payments
+  receipts
+}
+
+Table estimates {
+  _id objectid [pk]
+  project_id objectid [not null, ref: > projects._id]
+  version int [not null]
+  status varchar [not null]
+  subtotal varchar [not null]
+  discount varchar
+  tax varchar
+  margin varchar
+  total varchar [not null]
+  valid_until datetime
+  created_at datetime
+  updated_at datetime
+}
+
+Table estimate_items {
+  _id objectid [pk]
+  estimate_id objectid [not null, ref: > estimates._id]
+  material_id objectid [note: 'optional legacy ref Material']
+  category varchar [not null]
+  title varchar [not null]
+  unit varchar [not null]
+  quantity varchar [not null]
+  unit_price varchar [not null]
+  total varchar [not null]
+  sort_order int
+  created_at datetime
+  updated_at datetime
+}
+
+Table approvals {
+  _id objectid [pk]
+  project_id objectid [not null, ref: > projects._id]
+  estimate_id objectid [ref: > estimates._id]
+  kind varchar [not null]
+  status varchar [not null]
+  requested_by varchar [not null]
+  decided_by varchar
+  notes varchar
+  decided_at datetime
+  created_at datetime
+  updated_at datetime
+}
+
+Table invoices {
+  _id objectid [pk]
+  number varchar [not null, unique]
+  project_id objectid [not null, ref: > projects._id]
+  client_id objectid [not null, ref: > client_profiles._id]
+  status varchar [not null]
+  amount varchar [not null]
+  currency varchar [default: 'UAH']
+  due_date datetime
+  created_at datetime
+  updated_at datetime
+}
+
+Table payments {
+  _id objectid [pk]
+  project_id objectid [not null, ref: > projects._id]
+  invoice_id objectid [ref: > invoices._id]
+  client_id objectid [not null, ref: > client_profiles._id]
+  created_by_id objectid [ref: > users._id]
+  status varchar [not null]
+  method varchar [not null]
+  amount varchar [not null]
+  currency varchar [default: 'UAH']
+  provider_ref varchar [unique, note: 'sparse']
+  paid_at datetime
+  created_at datetime
+  updated_at datetime
+}
+
+Table receipts {
+  _id objectid [pk]
+  number varchar [not null, unique]
+  project_id objectid [not null, ref: > projects._id]
+  client_id objectid [not null, ref: > client_profiles._id]
+  payment_id objectid [not null, unique, ref: - payments._id]
+  invoice_id objectid [ref: > invoices._id]
+  status varchar [not null]
+  amount varchar [not null]
+  currency varchar [default: 'UAH']
+  pdf_path varchar
+  issued_at datetime
+  created_at datetime
+  updated_at datetime
+}
+
+TableGroup operations {
+  teams
+  team_members
+  tasks
+  task_comments
+  design_measurements
+  photo_reports
+}
+
+Table teams {
+  _id objectid [pk]
+  name varchar [not null, unique]
+  city varchar [not null]
+  speciality varchar [not null]
+  created_at datetime
+  updated_at datetime
+}
+
+Table team_members {
+  _id objectid [pk]
+  team_id objectid [not null, ref: > teams._id]
+  staff_id objectid [not null, ref: > staff_profiles._id]
+  is_lead boolean
+  created_at datetime
+  updated_at datetime
+}
+
+Table tasks {
+  _id objectid [pk]
+  project_id objectid [not null, ref: > projects._id]
+  team_id objectid [ref: > teams._id]
+  assignee_id objectid [ref: > staff_profiles._id]
+  title varchar [not null]
+  description varchar
+  status varchar [not null]
+  priority int
+  due_date datetime
+  checklist json [note: 'Record<string, unknown>']
+  created_at datetime
+  updated_at datetime
+}
+
+Table task_comments {
+  _id objectid [pk]
+  task_id objectid [not null, ref: > tasks._id]
+  author_id objectid [not null, ref: > users._id]
+  body varchar [not null]
+  created_at datetime
+  updated_at datetime
+}
+
+Table design_measurements {
+  _id objectid [pk]
+  project_id objectid [not null, ref: > projects._id]
+  zone_name varchar [not null]
+  floor_area varchar [not null]
+  wall_area varchar [not null]
+  ceiling_height varchar [not null]
+  notes varchar
+  created_at datetime
+  updated_at datetime
+}
+
+Table photo_reports {
+  _id objectid [pk]
+  project_id objectid [not null, ref: > projects._id]
+  task_id objectid [ref: > tasks._id]
+  uploaded_by objectid [not null, ref: > users._id]
+  file_ids varchar [note: 'ObjectId[] → uploaded_files']
+  photo_urls varchar [note: 'string[]']
+  caption varchar
+  category varchar [note: 'SITE | DESIGN']
+  created_at datetime
+  updated_at datetime
+}
+
+TableGroup engagement {
+  reviews
+  notifications
+  audit_logs
+}
+
+Table reviews {
+  _id objectid [pk]
+  client_id objectid [not null, ref: > client_profiles._id]
+  project_id objectid [ref: > projects._id]
+  rating int [not null]
+  title varchar [not null]
+  body varchar [not null]
+  status varchar
+  reviewer_name varchar
+  photo_urls varchar [note: 'string[]']
+  published_at datetime
+  created_at datetime
+  updated_at datetime
+}
+
+Table notifications {
+  _id objectid [pk]
+  project_id objectid [ref: > projects._id]
+  user_id objectid [ref: > users._id]
+  title varchar [not null]
+  body varchar [not null]
+  role_code varchar
+  entity_type varchar
+  entity_id varchar
+  link varchar
+  is_read boolean
+  severity varchar
+  created_at datetime
+  updated_at datetime
+}
+
+Table audit_logs {
+  _id objectid [pk]
+  project_id objectid [ref: > projects._id]
+  user_id objectid [ref: > users._id]
+  action varchar [not null]
+  entity_type varchar [not null]
+  entity_id varchar [not null]
+  metadata json
+  created_at datetime
+  updated_at datetime
+}

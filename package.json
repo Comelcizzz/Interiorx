@@ -1,0 +1,36 @@
+{
+	"name": "tailored-design-solutions",
+	"version": "0.1.0",
+	"private": true,
+	"description": "INTERIORIX — business platform for interior and exterior design projects.",
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	],
+	"scripts": {
+		"dev": "concurrently -n backend,frontend \"npm run dev --workspace=@tailored/backend\" \"npm run dev --workspace=@tailored/frontend\"",
+		"build": "npm run build --workspace=@tailored/shared && npm run build --workspace=@tailored/ui && npm run build --workspace=@tailored/backend && npm run build --workspace=@tailored/frontend",
+		"lint": "npm run lint --workspace=@tailored/backend && npm run lint --workspace=@tailored/frontend && npm run lint --workspace=@tailored/ui && npm run lint --workspace=@tailored/shared",
+		"format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,scss,md}\"",
+		"test": "npm run test --workspace=@tailored/backend",
+		"test:e2e": "playwright test",
+		"test:e2e:ui": "playwright test --ui",
+		"test:e2e:backend": "npm run test:e2e --workspace=@tailored/backend",
+		"test:all": "npm run test && npm run smoke && npm run test:e2e",
+		"verify:upload": "node scripts/verify-upload.mjs",
+		"ui:smoke": "node scripts/browser-ui-check.mjs",
+		"seed:report": "npm run seed:report --workspace=@tailored/backend",
+		"seed": "npm run seed --workspace=@tailored/backend",
+		"db:migrate": "echo \"MongoDB: no migrations — use npm run seed\"",
+		"db:reset": "echo \"Reset MongoDB manually or drop database, then npm run seed\""
+	},
+	"devDependencies": {
+		"@playwright/test": "^1.59.1",
+		"concurrently": "^9.1.2",
+		"prettier": "^3.3.3",
+		"typescript": "^5.5.4"
+	},
+	"dependencies": {
+		"playwright": "^1.59.1"
+	}
+}

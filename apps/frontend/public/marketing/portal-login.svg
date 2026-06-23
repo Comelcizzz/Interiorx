@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Client portal interior project dashboard">
+  <rect width="1200" height="900" fill="#eef1ed"/>
+  <path d="M96 84h1008v732H96z" rx="42" fill="#ffffff" stroke="#dfe5df" stroke-width="6"/>
+  <path d="M96 84h292v732H96z" rx="42" fill="#172033"/>
+  <path d="M158 164h168M158 226h108M158 342h166M158 400h126M158 458h148" stroke="#e9dcc9" stroke-width="22" stroke-linecap="round"/>
+  <path d="M458 160h542v184H458z" rx="32" fill="#f4efe7"/>
+  <path d="M506 214h240M506 266h162" stroke="#172033" stroke-width="22" stroke-linecap="round"/>
+  <path d="M810 204h136v92H810z" rx="24" fill="#26845b"/>
+  <path d="M458 402h240v174H458z" rx="28" fill="#dce8e0"/>
+  <path d="M738 402h262v174H738z" rx="28" fill="#ead6c3"/>
+  <path d="M458 630h542v86H458z" rx="24" fill="#172033"/>
+  <path d="M508 672h320" stroke="#ffffff" stroke-width="18" stroke-linecap="round"/>
+</svg>

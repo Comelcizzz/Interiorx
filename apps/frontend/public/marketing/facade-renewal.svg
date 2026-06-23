@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 780" role="img" aria-label="Exterior facade design concept">
+  <rect width="1200" height="780" fill="#eaf0ed"/>
+  <path d="M82 590h1036v190H82z" fill="#ccd5cd"/>
+  <path d="M212 106h776v548H212z" rx="28" fill="#f7f3eb" stroke="#ffffff" stroke-width="18"/>
+  <path d="M302 172h180v160H302zm0 232h180v160H302zm416-232h180v160H718zm0 232h180v160H718z" fill="#203229"/>
+  <path d="M530 170h140v394H530z" fill="#b77a4d"/>
+  <path d="M184 650h832" stroke="#8f6c55" stroke-width="10" stroke-linecap="round"/>
+  <path d="M108 188l96-82h790l98 82" fill="none" stroke="#172033" stroke-width="26" stroke-linejoin="round"/>
+  <circle cx="1040" cy="518" r="54" fill="#26845b" opacity=".75"/>
+  <circle cx="112" cy="520" r="38" fill="#d7b98f" opacity=".85"/>
+</svg>

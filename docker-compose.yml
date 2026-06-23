@@ -1,0 +1,69 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: tailored-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - tailored_mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 8
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: tailored-backend
+    restart: unless-stopped
+    environment:
+      # Always use the `mongodb` service on the compose network (not 127.0.0.1 from .env).
+      MONGODB_URI: mongodb://mongodb:27017/tailored
+      BACKEND_PORT: ${BACKEND_PORT:-4000}
+      # Image runs NODE_ENV=production; JWT access secret must be at least 32 chars in main.ts.
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-compose-default-jwt-access-secret-min32xx}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-compose-default-jwt-refresh-secret-min32xx}
+      JWT_ACCESS_TTL: ${JWT_ACCESS_TTL:-15m}
+      JWT_REFRESH_TTL: ${JWT_REFRESH_TTL:-7d}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      UPLOAD_DIR: /app/uploads
+    ports:
+      - "4000:4000"
+    volumes:
+      - tailored_uploads:/app/uploads
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:4000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 24
+      start_period: 25s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:4000/api}
+    container_name: tailored-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  tailored_mongo_data:
+  tailored_uploads:
