@@ -21,6 +21,7 @@
 		"ui:smoke": "node scripts/browser-ui-check.mjs",
 		"seed:report": "npm run seed:report --workspace=@tailored/backend",
 		"seed": "npm run seed --workspace=@tailored/backend",
+		"seed:atlas": "node scripts/seed-atlas.mjs",
 		"db:migrate": "echo \"MongoDB: no migrations — use npm run seed\"",
 		"db:reset": "echo \"Reset MongoDB manually or drop database, then npm run seed\""
 	},

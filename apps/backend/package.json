@@ -17,6 +17,7 @@
 		"prisma:dev": "prisma migrate dev",
 		"prisma:seed": "ts-node prisma/seed.ts",
 		"seed": "ts-node -r tsconfig-paths/register scripts/seed-mongo.ts",
+		"seed:prod": "node dist/apps/backend/scripts/seed-mongo.js",
 		"ensure:demo-assets": "ts-node -r tsconfig-paths/register scripts/ensure-demo-assets.ts",
 		"start:render": "node scripts/render-start.mjs",
 		"seed:report": "ts-node -r tsconfig-paths/register scripts/count-collections.ts",

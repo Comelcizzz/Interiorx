@@ -38,6 +38,8 @@ services:
         value: "2097152"
       - key: NODE_OPTIONS
         value: --max-old-space-size=460
+      - key: RUN_SEED_ON_BOOT
+        value: "true"
 
   - type: web
     name: interiorx-web

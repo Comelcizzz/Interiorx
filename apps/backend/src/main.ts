@@ -5,7 +5,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import { isAbsolute, join } from 'path'
 import { AppModule } from './app.module'
-import { SeedOnStartService } from './bootstrap/seed-on-start.service'
 import { setupUploadsHandler } from './files/uploads-handler'
 import { isAllowedCorsOrigin, parseCorsOrigins } from './lib/cors-origins'
 async function bootstrap() {
@@ -63,9 +62,5 @@ async function bootstrap() {
 	const document = SwaggerModule.createDocument(app, swaggerConfig)
 	SwaggerModule.setup('api/docs', app, document)
 	await app.listen(config.get<number>('BACKEND_PORT') ?? 4000)
-	if (nodeEnv === 'production') {
-		const seedOnStart = app.get(SeedOnStartService)
-		void seedOnStart.runAfterListen()
-	}
 }
 void bootstrap()

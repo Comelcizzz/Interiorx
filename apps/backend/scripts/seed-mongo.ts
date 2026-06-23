@@ -2830,6 +2830,23 @@ export async function runMongoSeed() {
 }
 
 async function main() {
+	if (process.env.FORCE_SEED !== 'true') {
+		const probe = await NestFactory.createApplicationContext(AppModule, {
+			logger: ['error', 'warn'],
+		})
+		try {
+			const userModel = probe.get<Model<User>>(getModelToken(User.name))
+			const count = await userModel.countDocuments()
+			if (count > 0) {
+				console.log(
+					`Seed skipped (${count} users already in database). Set FORCE_SEED=true to re-run.`
+				)
+				return
+			}
+		} finally {
+			await probe.close()
+		}
+	}
 	await runMongoSeed()
 }
 main().catch((err) => {
