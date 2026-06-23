@@ -14,10 +14,11 @@ FROM node:22-alpine AS runtime
 WORKDIR /app
 COPY package*.json ./
 COPY tsconfig.base.json ./
+COPY tsconfig.json ./
 COPY apps/backend/package*.json apps/backend/
 COPY apps/backend/tsconfig*.json apps/backend/
 COPY packages/shared/package*.json packages/shared/
-RUN npm install
+RUN npm install --include=dev
 ENV NODE_ENV=production
 COPY --from=build /app/apps/backend/dist apps/backend/dist
 COPY --from=build /app/apps/backend/src apps/backend/src
@@ -25,8 +26,9 @@ COPY --from=build /app/apps/backend/scripts apps/backend/scripts
 COPY --from=build /app/apps/backend/libs apps/backend/libs
 COPY --from=build /app/packages/shared/dist packages/shared/dist
 COPY --from=build /app/packages/shared/src packages/shared/src
+COPY apps/backend/scripts/render-boot.mjs apps/backend/scripts/render-boot.mjs
 COPY apps/backend/scripts/render-start.mjs apps/backend/scripts/render-start.mjs
 COPY apps/backend/scripts/demo-assets.ts apps/backend/scripts/demo-assets.ts
 COPY apps/backend/scripts/ensure-demo-assets.ts apps/backend/scripts/ensure-demo-assets.ts
 EXPOSE 4000
-CMD ["node", "apps/backend/scripts/render-start.mjs"]
+CMD ["node", "apps/backend/scripts/render-boot.mjs"]

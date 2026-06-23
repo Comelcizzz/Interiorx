@@ -17,6 +17,7 @@ services:
         value: production
       - key: MONGODB_URI
         sync: false
+      # Must end with database name, e.g. ...mongodb.net/tailored
       - key: JWT_ACCESS_SECRET
         generateValue: true
       - key: JWT_REFRESH_SECRET
