@@ -1,10 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { join } from 'node:path'
-import { register as registerPaths } from 'tsconfig-paths'
 import { register as registerTsNode } from 'ts-node'
 import { Model } from 'mongoose'
 import { User } from '../mongo/schemas/user.schema'
+
+/** dist/apps/backend/src/bootstrap → apps/backend package root */
+function backendPackageRoot() {
+	return join(__dirname, '..', '..', '..', '..')
+}
 
 @Injectable()
 export class SeedOnStartService {
@@ -24,15 +28,9 @@ export class SeedOnStartService {
 				return
 			}
 			this.logger.log('Running demo seed in-process...')
-			const repoRoot = process.cwd()
-			const backendRoot = join(repoRoot, 'apps/backend')
+			const backendRoot = backendPackageRoot()
+			const repoRoot = join(backendRoot, '..', '..')
 			const sharedDist = join(repoRoot, 'packages/shared/dist')
-			registerPaths({
-				baseUrl: backendRoot,
-				paths: {
-					'@tailored/shared': [sharedDist],
-				},
-			})
 			registerTsNode({
 				transpileOnly: true,
 				compilerOptions: {
