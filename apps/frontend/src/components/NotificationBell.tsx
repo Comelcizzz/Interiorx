@@ -1,6 +1,12 @@
 import { Button } from '@tailored/ui'
 import { Bell } from 'lucide-react'
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
+import {
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useState,
+	type CSSProperties,
+} from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { api } from '@/lib/api'
@@ -19,13 +25,50 @@ type NotificationsPage = {
 	perPage: number
 }
 
+function computePanelStyle(anchor: HTMLElement): CSSProperties {
+	const rect = anchor.getBoundingClientRect()
+	const margin = 8
+	const panelWidth = Math.min(360, window.innerWidth - margin * 2)
+	const maxH = Math.min(420, window.innerHeight - margin * 2)
+
+	let left = rect.left
+	if (left + panelWidth > window.innerWidth - margin) {
+		left = window.innerWidth - panelWidth - margin
+	}
+	left = Math.max(margin, left)
+
+	// Дзвіночок знизу сайдбару — панель над ним (через bottom, без «стрибка» вгору).
+	const bellNearBottom = rect.top > window.innerHeight * 0.55
+	if (bellNearBottom) {
+		return {
+			position: 'fixed',
+			left,
+			bottom: window.innerHeight - rect.top + margin,
+			width: panelWidth,
+			maxHeight: maxH,
+			zIndex: 5000,
+			boxSizing: 'border-box',
+		}
+	}
+
+	return {
+		position: 'fixed',
+		left,
+		top: rect.bottom + margin,
+		width: panelWidth,
+		maxHeight: maxH,
+		zIndex: 5000,
+		boxSizing: 'border-box',
+	}
+}
+
 export function NotificationBell() {
 	const anchorRef = useRef<HTMLDivElement | null>(null)
 	const panelRef = useRef<HTMLDivElement | null>(null)
 	const [open, setOpen] = useState(false)
 	const [count, setCount] = useState(0)
 	const [items, setItems] = useState<NotificationRow[]>([])
-	const [panelStyle, setPanelStyle] = useState<CSSProperties>({})
+	const [panelStyle, setPanelStyle] = useState<CSSProperties | null>(null)
 
 	async function refresh() {
 		try {
@@ -67,54 +110,27 @@ export function NotificationBell() {
 	}, [open])
 
 	useLayoutEffect(() => {
-		if (!open) return
+		if (!open) {
+			setPanelStyle(null)
+			return
+		}
 		const anchor = anchorRef.current
 		if (!anchor) return
 
-		function compute() {
-			const rect = anchor!.getBoundingClientRect()
-			const panelWidth = Math.min(360, window.innerWidth - 16)
-			const margin = 8
-			const maxH = Math.min(420, window.innerHeight - margin * 2)
-
-			// Відкриваємо панель праворуч від сайдбару (якщо є місце), інакше — від правого краю вікна.
-			let left = rect.right + margin
-			if (left + panelWidth > window.innerWidth - margin) {
-				left = window.innerWidth - panelWidth - margin
+		function update() {
+			if (anchorRef.current) {
+				setPanelStyle(computePanelStyle(anchorRef.current))
 			}
-			left = Math.max(margin, left)
-
-			const spaceBelow = window.innerHeight - rect.bottom - margin
-			const spaceAbove = rect.top - margin
-			let top: number
-			// Якір знизу екрана: відкриваємо вгору, щоб панель не «тікала» під тач.
-			if (spaceBelow < 140 && spaceAbove > spaceBelow) {
-				top = rect.top - maxH - margin
-			} else {
-				top = rect.bottom + margin
-			}
-			top = Math.max(margin, Math.min(top, window.innerHeight - maxH - margin))
-
-			setPanelStyle({
-				position: 'fixed',
-				left,
-				top,
-				width: panelWidth,
-				maxHeight: maxH,
-				zIndex: 5000,
-				boxSizing: 'border-box',
-				touchAction: 'manipulation',
-			})
 		}
 
-		compute()
-		window.addEventListener('resize', compute)
-		window.addEventListener('scroll', compute, true)
+		update()
+		window.addEventListener('resize', update)
+		window.addEventListener('scroll', update, true)
 		return () => {
-			window.removeEventListener('resize', compute)
-			window.removeEventListener('scroll', compute, true)
+			window.removeEventListener('resize', update)
+			window.removeEventListener('scroll', update, true)
 		}
-	}, [open, count, items.length])
+	}, [open])
 
 	useEffect(() => {
 		if (!open) return
@@ -155,13 +171,14 @@ export function NotificationBell() {
 				onClick={() => setOpen((v) => !v)}
 				icon={<Bell />}
 				aria-label="Сповіщення"
+				aria-expanded={open}
 			/>
 			{count > 0 ? (
 				<span className="pointer-events-none absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white">
 					{count > 9 ? '9+' : count}
 				</span>
 			) : null}
-			{open && portalHost
+			{open && panelStyle && portalHost
 				? createPortal(
 						<div
 							ref={panelRef}
