@@ -2739,37 +2739,17 @@ async function seedDiplomaVolumeData(
 		})
 	}
 
-	const notificationCount = await c.notificationModel.countDocuments()
-	const demoClientUser = await c.userModel
-		.findOne({ email: 'client@tailored.demo' })
-		.select('_id')
-		.lean()
-	for (let i = notificationCount; i < 15; i++) {
-		const project = projects[i % projects.length]
-		const roleCycle = [RoleCode.ADMIN, RoleCode.PROJECT_MANAGER, RoleCode.CLIENT][
-			i % 3
-		]
-		const $set: Record<string, unknown> = {
-			projectId: project?._id,
-			title: `Демо-сповіщення ${i + 1}`,
-			body: 'Оновлено етап, рахунок або кошторис у демо-проєкті.',
-			entityType: 'Project',
-			entityId: project?._id?.toString(),
-			link: project ? `/projects/${project._id}` : '/projects',
-			isRead: i % 4 === 0,
-			severity: ['info', 'success', 'warning'][i % 3],
-		}
-		if (roleCycle === RoleCode.CLIENT && demoClientUser?._id) {
-			$set.userId = demoClientUser._id
-			$set.roleCode = null
-		} else {
-			$set.roleCode = roleCycle
-			$set.userId = null
-		}
-		await c.notificationModel.findOneAndUpdate(
-			{ title: `Демо-сповіщення ${i + 1}` },
-			{ $set },
-			{ upsert: true }
+	const removedDemoNotifications = await c.notificationModel
+		.deleteMany({
+			$or: [
+				{ title: { $regex: /^Демо-сповіщення \d+$/ } },
+				{ title: { $regex: /^Demo notification \d+$/i } },
+			],
+		})
+		.exec()
+	if ((removedDemoNotifications.deletedCount ?? 0) > 0) {
+		console.log(
+			`Removed ${removedDemoNotifications.deletedCount} hardcoded demo notification(s).`
 		)
 	}
 }

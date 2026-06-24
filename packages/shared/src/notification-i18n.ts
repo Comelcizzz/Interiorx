@@ -39,7 +39,6 @@ const LEGACY_TITLE_UK: Record<string, string> = {
 	'Payment received': 'Оплату отримано',
 	'Receipt issued': 'Чек видано',
 	'Materials replenished': 'Матеріали поповнено',
-	'Demo notification': 'Демо-сповіщення',
 }
 
 const BODY_REPLACEMENTS: Array<[RegExp, string]> = [
@@ -74,10 +73,6 @@ const BODY_REPLACEMENTS: Array<[RegExp, string]> = [
 		'Розширені тестові дані завантажено.',
 	],
 	[
-		/Updated stage, invoice or document in demo project\./i,
-		'Оновлено етап, рахунок або кошторис у демо-проєкті.',
-	],
-	[
 		/Sign the contract for project (.+?): (.+)/i,
 		'Підпишіть договір для проєкту $1: $2',
 	],
@@ -103,9 +98,6 @@ export function localizeNotificationFields(
 	body: string
 ): { title: string; body: string } {
 	let t = LEGACY_TITLE_UK[title] ?? title
-	if (/^Demo notification \d+$/i.test(title)) {
-		t = title.replace(/^Demo notification/i, 'Демо-сповіщення')
-	}
 	let b = body
 	for (const [pattern, replace] of BODY_REPLACEMENTS) {
 		b = b.replace(pattern, replace)
